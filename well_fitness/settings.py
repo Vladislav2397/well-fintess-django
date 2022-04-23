@@ -1,3 +1,5 @@
+from private import secret_key
+
 """
 Django settings for well_fitness project.
 
@@ -20,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@sf4$hc4j-o_s2e7e4ls^itnhs@j_e&le=2qdd2t^+^e$%)k*$'
+SECRET_KEY = secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
