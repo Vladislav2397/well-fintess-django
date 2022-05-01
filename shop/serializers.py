@@ -5,7 +5,7 @@ from .models import Equipment, EquipmentGroup, EquipmentFamily, EquipmentCategor
 class EquipmentSerializer(ModelSerializer):
     class Meta:
         model = Equipment
-        fields = ('id', 'name', 'label', 'description', 'type')
+        fields = '__all__'
 
 
 class EquipmentCategorySerializer(ModelSerializer):
@@ -14,6 +14,15 @@ class EquipmentCategorySerializer(ModelSerializer):
     class Meta:
         model = EquipmentCategory
         fields = ('id', 'name', 'count')
+
+
+class EquipmentCategoryWithEquipmentsSerializer(ModelSerializer):
+    count = IntegerField(source='equipments.count', read_only=True)
+    equipments = EquipmentSerializer(many=True)
+
+    class Meta:
+        model = EquipmentCategory
+        fields = ('id', 'name', 'count', 'equipments')
 
 
 class EquipmentGroupSerializer(ModelSerializer):

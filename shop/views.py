@@ -44,12 +44,35 @@ class EquipmentsAPIView(generics.ListAPIView):
     serializer_class = serializers.EquipmentSerializer
 
     def get_queryset(self):
-        family_id = self.kwargs['family_id']
+        # family_id = self.kwargs.get('family_id', None)
 
-        if family_id:
-            return models.Equipment.objects.filter(type=family_id)
+        is_promo = self.request.query_params.get('is_promo', None)
+        category = self.request.query_params.get('category', None)
+        brand = self.request.query_params.get('brand', None)
+
+        # if family_id:
+        #     return models.Equipment.objects.filter(type=family_id)
+
+        if is_promo:
+            return models.Equipment.objects.filter(is_promo=is_promo)
+
+        if category:
+            return models.Equipment.objects.filter(type=category)
+
+        if brand:
+            return models.Equipment.objects.filter(brand=brand)
 
         return models.Equipment.objects.all()
+
+
+class EquipmentCategoryAPIView(generics.RetrieveAPIView):
+    queryset = models.EquipmentCategory.objects.all()
+    serializer_class = serializers.EquipmentCategoryWithEquipmentsSerializer
+
+
+class EquipmentCategoriesAPIView(generics.ListAPIView):
+    queryset = models.EquipmentCategory.objects.all()
+    serializer_class = serializers.EquipmentCategoryWithEquipmentsSerializer
 
 
 class EquipmentDetailAPIView(generics.RetrieveAPIView):

@@ -25,13 +25,26 @@ urlpatterns = [
         'groups/<int:group_id>/families/<int:pk>/',
         views.EquipmentFamilyDetailAPIView.as_view()
     ),
+    # path(
+    #     'groups/<int:group_id>/families/<int:family_id>/equipments/',
+    #     views.EquipmentsAPIView.as_view()
+    # ),
     path(
-        'groups/<int:group_id>/families/<int:family_id>/equipments/',
+        'groups/<int:group_id>/families/<int:family_id>/equipments/<int:pk>/',
+        views.EquipmentDetailAPIView.as_view()
+    ),
+    # FIXME: Rename EquipmentModel type to category
+    path(
+        'equipments/',
         views.EquipmentsAPIView.as_view()
     ),
     path(
-        'groups/<int:group_id>/families/<int:family_id>/equipments/<int:pk>',
-        views.EquipmentDetailAPIView.as_view()
+        'categories/',
+        views.EquipmentCategoriesAPIView.as_view()
     ),
+    path(
+        'categories/<int:pk>/',
+        views.EquipmentCategoryAPIView.as_view()
+    )
     # path('', include(router.urls))
 ]

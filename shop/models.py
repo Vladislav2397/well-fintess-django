@@ -65,7 +65,7 @@ class Rating(Model):
     star_count = IntegerField(verbose_name="Рейтинг", default=0)
 
     def __str__(self):
-        return self.star_count
+        return str(self.star_count)
 
 
 class Equipment(Model):
