@@ -4,6 +4,7 @@ from django.db.models import (
     TextField,
     ForeignKey,
     CASCADE,
+    SET_NULL,
     ImageField,
     BooleanField,
     IntegerField,
@@ -49,6 +50,9 @@ class EquipmentCategory(Model):
         null=True
     )
 
+    def equipment_count(self):
+        return self.equipments.count()
+
     def __str__(self):
         return self.name
 
@@ -68,11 +72,25 @@ class Rating(Model):
         return str(self.star_count)
 
 
+class Promotion(Model):
+    name = CharField(max_length=255, verbose_name='Название преимущества')
+
+    def __str__(self):
+        return self.name
+
+
 class Equipment(Model):
     name = CharField(max_length=200, verbose_name='Название')
     label = CharField(max_length=300, verbose_name='Марка')
     description = TextField(verbose_name='Описание', null=True)
     is_promo = BooleanField(verbose_name="Акционный", default=False)
+    promotion = ForeignKey(
+        Promotion,
+        null=True,
+        on_delete=CASCADE,
+        verbose_name="Название акции"
+    )
+    # TODO: Refactor output type (returned 'OSTALOS_MALO')
     in_stock = CharField(
         choices=IN_STOCK_ENUM,
         max_length=100,
@@ -93,6 +111,7 @@ class Equipment(Model):
         on_delete=CASCADE,
         verbose_name='Бренд'
     )
+    # TODO: Rename type to category_id
     type = ForeignKey(
         EquipmentCategory,
         related_name='equipments',
