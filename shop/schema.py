@@ -7,18 +7,43 @@ from .models import (
     EquipmentFamily,
     EquipmentCategory,
     Equipment,
+    Brand,
+    Rating,
 )
 
 
+class BrandType(DjangoObjectType):
+    class Meta:
+        model = Brand
+        fields = ('id', 'name', 'image')
+
+
 class EquipmentType(DjangoObjectType):
+    brand = graphene.Field(BrandType)
     promotion = graphene.String()
+    rating = graphene.Int()
 
     def resolve_promotion(self, info):
         return self.promotion_id
 
+    def resolve_brand(self, info):
+        return Brand.objects.get(pk=self.brand_id)
+
+    def resolve_rating(self, info):
+        return Rating.objects.get(pk=self.rating_id).star_count
+
     class Meta:
         model = Equipment
-        fields = '__all__'
+        fields = (
+            'id',
+            'name',
+            'label',
+            'promotion',
+            'in_stock',
+            'description',
+            'brand',
+            'rating',
+        )
 
 
 class EquipmentCategoryType(DjangoObjectType):
@@ -81,6 +106,8 @@ class Query(graphene.ObjectType):
     equipments_by_promotion = graphene.List(
         EquipmentType, id=graphene.Int()
     )
+
+    brands = graphene.List(BrandType)
     
     def resolve_groups(self, info):
         # We can easily optimize query count in the resolve method
@@ -111,8 +138,11 @@ class Query(graphene.ObjectType):
     def resolve_equipments_by_category_id(self, info, id):
         return Equipment.objects.filter(type=id)
 
-    def resolve_equipments_by_promotion(self, indo, id):
+    def resolve_equipments_by_promotion(self, info, id):
         return Equipment.objects.filter(promotion_id=id)
+
+    def resolve_brands(self, info):
+        return Brand.objects.all()
 
 
 schema = graphene.Schema(query=Query)
